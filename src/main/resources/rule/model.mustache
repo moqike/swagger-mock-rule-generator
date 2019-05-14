@@ -1,0 +1,8 @@
+{{#models}}
+{{#model}}
+const schema = {{{modelJson}}};
+schema.id = '/{{classname}}';
+
+export default schema;
+{{/model}}
+{{/models}}

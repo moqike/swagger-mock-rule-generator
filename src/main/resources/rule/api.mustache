@@ -1,0 +1,50 @@
+{{#imports}}
+import { {{classname}} } from './{{filename}}';
+{{/imports}}
+
+{{#operations}}
+  {{#operation}}
+    {{#consumes}}
+export const {{operationIdCamelCase}} = {
+  headers: {
+    'Content-Type': {{mediaType}},
+    {{#headerParams}}
+    {{#required}}
+    '{{baseName}}': /.+/,
+    {{/required}}
+    {{/headerParams}}
+  },
+  body: {
+    type: '{{ruleBodyType}}',
+    {{#hasBodyParam}}
+    schema: {
+      {{!only one body param allowed in swagger file}}
+      {{#bodyParams}}
+      {{^isListContainer}}
+        {{#isPrimitiveType}}
+      type: {{dataType}}
+        {{/isPrimitiveType}}
+        {{^isPrimitiveType}}
+      '$ref': '/{{baseType}}'
+        {{/isPrimitiveType}}
+      {{/isListContainer}}
+      {{#isListContainer}}
+      'type': 'array',
+      'items': {
+         'type': {{baseType}}
+       }
+      {{/isListContainer}}
+      {{/bodyParams}}
+    },
+    refs: [
+      {{#refs}}
+      {{classname}},
+      {{/refs}}
+    ]
+    {{/hasBodyParam}}
+  }
+};
+
+    {{/consumes}}
+  {{/operation}}
+{{/operations}}
