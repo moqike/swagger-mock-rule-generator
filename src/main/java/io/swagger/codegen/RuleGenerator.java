@@ -159,6 +159,15 @@ public class RuleGenerator extends AbstractTypeScriptClientCodegen {
     return operations;
   }
 
+  private Property modifyRef(Property property) {
+    if (property instanceof RefProperty) {
+      String ref = ((RefProperty) property).get$ref();
+      ref = ref.substring("#/definitions".length());
+      ((RefProperty) property).set$ref(ref);
+    }
+    return property;
+  }
+
   @Override
   public CodegenModel fromModel(String name, Model model, Map<String, Model> allDefinitions) {
     CodegenModel codegenModel = super.fromModel(name, model, allDefinitions);
@@ -166,9 +175,11 @@ public class RuleGenerator extends AbstractTypeScriptClientCodegen {
 
     for (Property property : properties.values()) {
       if (property instanceof RefProperty) {
-        String ref = ((RefProperty) property).get$ref();
-        ref = ref.substring("#/definitions".length());
-        ((RefProperty) property).set$ref(ref);
+        modifyRef(property);
+      } else if (property instanceof ArrayProperty) {
+        Property itemProperty = ((ArrayProperty) property).getItems();
+        modifyRef(itemProperty);
+
       }
     }
     codegenModel.modelJson = Json.pretty(model);

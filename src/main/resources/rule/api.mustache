@@ -1,5 +1,5 @@
 {{#imports}}
-import { {{classname}} } from './{{filename}}';
+import {{classname}} from '../{{filename}}';
 {{/imports}}
 
 {{#operations}}
@@ -7,7 +7,7 @@ import { {{classname}} } from './{{filename}}';
     {{#consumes}}
 export const {{operationIdCamelCase}} = {
   headers: {
-    'Content-Type': {{mediaType}},
+    'Content-Type': '{{mediaType}}',
     {{#headerParams}}
     {{#required}}
     '{{baseName}}': /.+/,
